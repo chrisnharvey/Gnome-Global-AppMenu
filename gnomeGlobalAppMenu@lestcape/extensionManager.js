@@ -335,7 +335,9 @@ MyApplet.prototype = {
 
          this.gradient = new ConfigurableMenus.GradientLabelMenuItem("", 10, { focusOnHover: false });
          this.actor.add(this.gradient.actor);
-         this.actor.connect("enter-event", Lang.bind(this, this._onAppletEnterEvent));
+         //this.actor.connect("enter-event", Lang.bind(this, this._onAppletEnterEvent));
+         Main.panel.actor.connect("enter-event", Lang.bind(this, this._onAppletEnterEvent));
+         Main.panel.actor.connect("leave-event", Lang.bind(this, this._onAppletLeaveEvent));
 
          this.menuFactory = new MyMenuFactory();
          this._system = new IndicatorAppMenuWatcher.SystemProperties();
@@ -994,15 +996,24 @@ MyApplet.prototype = {
    },
 
    _onAppletEnterEvent: function() {
-      if(this.currentWindow) {
-         if(this.indicatorDbus && (this.currentWindow != this.sendWindow)) {
-            this.indicatorDbus.updateMenuForWindow(this.currentWindow);
-            this.sendWindow = this.currentWindow;
-         }
-      }
-      if((this.menu)&&(this.openOnHover)) {
-         this.menu.open(true);
-      }
+     // FIXME: This should be configurable in settings
+     this.menu.open();
+     Main.panel.statusArea.appMenu._label.hide();
+    //   if(this.currentWindow) {
+    //      if(this.indicatorDbus && (this.currentWindow != this.sendWindow)) {
+    //         this.indicatorDbus.updateMenuForWindow(this.currentWindow);
+    //         this.sendWindow = this.currentWindow;
+    //      }
+    //   }
+    //   if((this.menu)&&(this.openOnHover)) {
+    //      //this.menu.open(true);
+    //   }
+   },
+
+   _onAppletLeaveEvent: function() {
+     // FIXME: This should only happen if there is no submenu open
+     Main.panel.statusArea.appMenu._label.show();
+     this.menu.close(false, true);
    },
 
    on_orientation_changed: function(orientation) {

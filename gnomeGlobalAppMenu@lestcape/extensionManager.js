@@ -1103,13 +1103,7 @@ MyApplet.prototype = {
    },
 
    on_applet_clicked: function(event) {
-      if((this.menu) && (event.get_button() == 1)) {
-         this.menu.forcedToggle();
-         //if (Main.overview.shouldToggleByCornerOrButton())
-         //    Main.overview.toggle();
-         return true;
-      }
-      return false;
+	this.hudMenuSearch.toggle(true);
    },
 
    execInstallLanguage: function() {
